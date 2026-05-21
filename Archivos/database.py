@@ -1,7 +1,7 @@
 from peewee import *
 from datetime import datetime
 
-from security import hash_password
+from .security import hash_password
 
 
 BaseDeDatos = MySQLDatabase("ToDoListApp", user = "root", password = "FBMM1477",
