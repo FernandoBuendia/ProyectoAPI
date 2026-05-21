@@ -29,5 +29,8 @@ class TaskResponseModel(ResponseModel):
     title: str
     description: str | None
     completed: bool
-    user_username: str
 
+class TaskUpdateModel(BaseModel):
+    title: str
+    description: str
+    completed: bool
