@@ -1,4 +1,4 @@
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 
 
@@ -10,7 +10,7 @@ class ResponseModel(BaseModel):
 
 class UserRequestModel(BaseModel):
     username: str
-    password: str
+    password: str = Field(min_length = 8, max_length = 72)
 
 class UserResponseModel(ResponseModel):
     id: int
@@ -20,9 +20,9 @@ class UserResponseModel(ResponseModel):
 
 class TaskRequestModel(BaseModel):
     title: str
-    description: str | None = None
+    description: str | None
     completed: bool = False
-    user_username: str
+    user_id: int
 
 class TaskResponseModel(ResponseModel):
     id: int
@@ -31,6 +31,6 @@ class TaskResponseModel(ResponseModel):
     completed: bool
 
 class TaskUpdateModel(BaseModel):
-    title: str
-    description: str
-    completed: bool
+    title: str | None = None
+    description: str | None = None
+    completed: bool | None = None

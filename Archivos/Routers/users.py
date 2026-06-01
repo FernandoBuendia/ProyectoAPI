@@ -12,7 +12,7 @@ async def create_user(user: UserRequestModel):
 
   if User.select().where(User.username == user.username).exists():
     raise HTTPException(status_code=400, detail="Username already exists")
-  
+
   new_user = User.create(
     username = user.username,
     password = User.generate_password(user.password)

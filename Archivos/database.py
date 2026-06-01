@@ -2,6 +2,7 @@ from peewee import *
 from datetime import datetime
 
 from .security import hash_password
+from .security import verify_password
 
 
 BaseDeDatos = MySQLDatabase("ToDoListApp", user = "root", password = "FBMM1477",
@@ -14,7 +15,7 @@ class BaseModel(Model):
 class User(BaseModel):
   id = AutoField()
   username = CharField(max_length = 50, unique = True)
-  password = CharField(max_length = 100)
+  password = CharField(max_length = 255)
   created_at = DateTimeField(default = datetime.now)
 
   class Meta:
@@ -23,6 +24,13 @@ class User(BaseModel):
   @staticmethod
   def generate_password(password: str):
     return hash_password(password)
+
+  @classmethod
+  def authenticate(cls, username, password):
+    user = cls.select().where(cls.username == username).first()
+    
+    if user and verify_password(password, user.password):
+      return user
 
 class Task(BaseModel):
   id = AutoField()

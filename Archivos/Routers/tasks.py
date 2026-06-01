@@ -10,7 +10,7 @@ router = APIRouter(prefix="/tasks")
 @router.post("/", response_model=TaskResponseModel)
 async def create_task(task: TaskRequestModel):
 
-  user = User.select().where(User.username == task.user_username).first()
+  user = User.select().where(User.id == task.user_id).first()
 
   if user is None:
     raise HTTPException(status_code=404, detail="User not found")
@@ -33,20 +33,20 @@ async def get_task(task_id: int):
   
   return task
 
-@router.get("/user/{user_username}", response_model=list[TaskResponseModel])
-async def get_user_tasks(user_username: str):
+@router.get("/user/{user_id}", response_model=list[TaskResponseModel])
+async def get_user_tasks(user_id: int):
 
-  user = User.select().where(User.username == user_username).first()
+  user = User.select().where(User.id == user_id).first()
 
   if user is None:
     raise HTTPException(status_code=404, detail="User not found")
   
   return list(user.tasks)
 
-@router.put("/user/{user_username}/tasks/{task_id}", response_model=TaskResponseModel)
-async def update_task(user_username: str, task_id: int, task: TaskUpdateModel):
+@router.put("/user/{user_id}/tasks/{task_id}", response_model=TaskResponseModel)
+async def update_task(user_id: int, task_id: int, task: TaskUpdateModel):
 
-  user = User.select().where(User.username == user_username).first()
+  user = User.select().where(User.id == user_id).first()
 
   if user is None:
     raise HTTPException(status_code=404, detail="User not found")
@@ -56,9 +56,14 @@ async def update_task(user_username: str, task_id: int, task: TaskUpdateModel):
   if task_to_update is None:
     raise HTTPException(status_code=404, detail="Task not found")
   
-  task_to_update.title = task.title
-  task_to_update.description = task.description
-  task_to_update.completed = task.completed
+  if task.title is not None:
+    task_to_update.title = task.title
+
+  if task.description is not None:
+    task_to_update.description = task.description
+
+  if task.completed is not None:
+    task_to_update.completed = task.completed
 
   task_to_update.save()
 

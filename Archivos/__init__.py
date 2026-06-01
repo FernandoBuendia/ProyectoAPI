@@ -3,13 +3,15 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi import APIRouter
 from fastapi import Depends
+from fastapi import HTTPException
+from fastapi import status
 
 from fastapi.security import OAuth2PasswordRequestForm
 
 from .database import BaseDeDatos as connection
 from .database import User, Task
 
-from .Routers import user_router, task_router
+from .routers import user_router, task_router
 
 
 @asynccontextmanager
@@ -36,12 +38,22 @@ api_v1.include_router(user_router)
 api_v1.include_router(task_router)
 
 
-@api_v1.post("/auth")
+@api_v1.post("/authentication")
 async def auth(data: OAuth2PasswordRequestForm = Depends()):
-  return {
-    "username": data.username,
-    "password": data.password
-  }
+  
+  user = User.authenticate(data.username, data.password)
+  
+  if user:
+    return {
+      "username": data.username,
+      "password": data.password
+    }
+  
+  else:
+    raise HTTPException(
+      status_code = status.HTTP_401_UNAUTHORIZED,
+      detail = "Username o contraseña incorrectos",
+      headers = {"WWW-Authenticate": "Bearer"})
 
 app.include_router(api_v1)
 
