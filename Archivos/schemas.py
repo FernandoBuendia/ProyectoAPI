@@ -22,7 +22,6 @@ class TaskRequestModel(BaseModel):
     title: str
     description: str | None
     completed: bool = False
-    user_id: int
 
 class TaskResponseModel(ResponseModel):
     id: int

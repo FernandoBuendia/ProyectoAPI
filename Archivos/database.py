@@ -37,7 +37,7 @@ class Task(BaseModel):
   title = CharField(max_length = 100)
   description = TextField(null = True)
   completed = BooleanField(default = False)
-  user = ForeignKeyField(User, backref = "tasks", on_delete = "CASCADE")
+  user_id = ForeignKeyField(User.id, backref = "tasks", on_delete = "CASCADE")
   created_at = DateTimeField(default = datetime.now)
 
   class Meta:

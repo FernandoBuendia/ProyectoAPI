@@ -13,6 +13,7 @@ from .database import User, Task
 
 from .routers import user_router, task_router
 
+from common import create_access_token
 
 @asynccontextmanager
 async def lifespan(_app):
@@ -45,14 +46,14 @@ async def auth(data: OAuth2PasswordRequestForm = Depends()):
   
   if user:
     return {
-      "username": data.username,
-      "password": data.password
+      "access_token": create_access_token(user),
+      "token_type": "bearer"
     }
   
   else:
     raise HTTPException(
       status_code = status.HTTP_401_UNAUTHORIZED,
-      detail = "Username o contraseña incorrectos",
+      detail = "Credenciales inválidas",
       headers = {"WWW-Authenticate": "Bearer"})
 
 app.include_router(api_v1)
