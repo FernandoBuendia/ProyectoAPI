@@ -1,11 +1,24 @@
 from datetime import datetime
 
-from peewee import *
+from peewee import (
+    AutoField,
+    BooleanField,
+    CharField,
+    DateTimeField,
+    ForeignKeyField,
+    Model,
+    MySQLDatabase,
+    TextField,
+)
 
 from .security import hash_password, verify_password
 
 BaseDeDatos = MySQLDatabase(
-    "ToDoListApp", user="root", password="FBMM1477", host="localhost", port=3306
+    "ToDoListApp",
+    user="root",
+    password="FBMM1477",
+    host="localhost",
+    port=3306,
 )
 
 

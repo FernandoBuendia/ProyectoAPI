@@ -1,13 +1,8 @@
+from datetime import datetime, timedelta, timezone
+
 import jwt
-
-from datetime import datetime
-from datetime import timedelta
-from datetime import timezone
-
+from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
-from fastapi import Depends
-from fastapi import HTTPException
-from fastapi import status
 
 from archivos.database import User
 
